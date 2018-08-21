@@ -79,6 +79,12 @@ type PrometheusSpec struct {
 	LogLevel string `json:"logLevel,omitempty"`
 	// Interval between consecutive scrapes.
 	ScrapeInterval string `json:"scrapeInterval,omitempty"`
+	// Number of times Liveness Probe can fail before killing pod
+	LivenessFailureThreshold *int32 `json:"livenessFailureThreshold,omitempty"`
+	// Time in seconds before which Liveness Probes will start
+	LivenessProbeInitialDelaySeconds *int32 `json:"livenessProbeInitialDelaySeconds,omitempty"`
+	// Number of times Readiness Probe can fail before taking pod out of rotation
+	ReadinessFailureThreshold *int32 `json:"readinessFailureThreshold,omitempty"`
 	// Interval between consecutive evaluations.
 	EvaluationInterval string `json:"evaluationInterval,omitempty"`
 	// The labels to add to any time series or alerts when communicating with
