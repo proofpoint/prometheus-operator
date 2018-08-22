@@ -1,5 +1,6 @@
 sudo: required
 language: go
+go_import_path: github.com/coreos/prometheus-operator
 go:
 - "1.10"
 services:
@@ -10,7 +11,7 @@ before_install:
 jobs:
   include:
   # Check generated contents are up to date and code is formatted.
-  - stage: Sanity check and unit tests 
+  - stage: Sanity check and unit tests
     script: ./scripts/check-make-generate.sh
   # Build Prometheus config reloader
   - script: cd contrib/prometheus-config-reloader && make build
