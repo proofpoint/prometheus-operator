@@ -206,6 +206,16 @@ Specification of the desired behavior of the Prometheus cluster. More info: http
 | retention | Time duration Prometheus shall retain data for. | string | false |
 | logLevel | Log level for Prometheus to be configured with. | string | false |
 | scrapeInterval | Interval between consecutive scrapes. | string | false |
+| livenessFailureThreshold | Number of times Liveness Probe can fail before killing pod | *int32 | false |
+| livenessProbeInitialDelaySeconds | Time in seconds before which Liveness Probes will start | *int32 | false |
+| readinessFailureThreshold | Number of times Readiness Probe can fail before taking pod out of rotation | *int32 | false |
+| readinessPeriodSeconds | Readiness Probe PeriodSeconds | *int32 | false |
+| livenessPeriodSeconds | Liveness Probe PeriodSeconds | *int32 | false |
+| probeTimeoutSeconds | Timeout in seconds for both readiness and liveness probe | *int32 | false |
+| webReadTimeout | Maximum duration before timing out read of the request, and closing idle connections. | string | false |
+| webMaxConnections | Maximum number of simultaneous connections | *int32 | false |
+| queryTimeout | Maximum time a query may take before being aborted. | string | false |
+| queryMaxConcurrency | Maximum number of queries executed concurrently. | *int32 | false |
 | evaluationInterval | Interval between consecutive evaluations. | string | false |
 | externalLabels | The labels to add to any time series or alerts when communicating with external systems (federation, remote storage, Alertmanager). | map[string]string | false |
 | externalUrl | The external URL the Prometheus instances will be available under. This is necessary to generate correct URLs. This is necessary if Prometheus is not served from root of a DNS name. | string | false |
