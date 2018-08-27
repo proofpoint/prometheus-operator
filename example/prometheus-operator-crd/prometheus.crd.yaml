@@ -1339,6 +1339,19 @@ spec:
               description: ListenLocal makes the Prometheus server listen on loopback,
                 so that it does not bind against the Pod IP.
               type: boolean
+            livenessFailureThreshold:
+              description: Number of times Liveness Probe can fail before killing
+                pod
+              format: int32
+              type: integer
+            livenessPeriodSeconds:
+              description: Liveness Probe PeriodSeconds
+              format: int32
+              type: integer
+            livenessProbeInitialDelaySeconds:
+              description: Time in seconds before which Liveness Probes will start
+              format: int32
+              type: integer
             logLevel:
               description: Log level for Prometheus be configured in.
               type: string
@@ -1626,6 +1639,26 @@ spec:
 
                     Populated by the system. Read-only. More info: http://kubernetes.io/docs/user-guide/identifiers#uids
                   type: string
+            probeTimeoutSeconds:
+              description: Timeout in seconds for both readiness and liveness probe
+              format: int32
+              type: integer
+            queryMaxConcurrency:
+              description: Maximum number of queries executed concurrently.
+              format: int32
+              type: integer
+            queryTimeout:
+              description: Maximum time a query may take before being aborted.
+              type: string
+            readinessFailureThreshold:
+              description: Number of times Readiness Probe can fail before taking
+                pod out of rotation
+              format: int32
+              type: integer
+            readinessPeriodSeconds:
+              description: Readiness Probe PeriodSeconds
+              format: int32
+              type: integer
             remoteRead:
               description: If specified, the remote_read spec. This is an experimental
                 feature, it may change in any upcoming release in a breaking way.
@@ -2586,6 +2619,14 @@ spec:
               type: array
             version:
               description: Version of Prometheus to be deployed.
+              type: string
+            webMaxConnections:
+              description: Maximum number of simultaneous connections
+              format: int32
+              type: integer
+            webReadTimeout:
+              description: Maximum duration before timing out read of the request,
+                and closing idle connections.
               type: string
         status:
           description: 'Most recent observed status of the Prometheus cluster. Read-only.

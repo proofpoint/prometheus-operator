@@ -731,6 +731,76 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 								Format:      "",
 							},
 						},
+						"livenessFailureThreshold": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Number of times Liveness Probe can fail before killing pod",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"livenessProbeInitialDelaySeconds": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Time in seconds before which Liveness Probes will start",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"readinessFailureThreshold": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Number of times Readiness Probe can fail before taking pod out of rotation",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"readinessPeriodSeconds": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Readiness Probe PeriodSeconds",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"livenessPeriodSeconds": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Liveness Probe PeriodSeconds",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"probeTimeoutSeconds": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Timeout in seconds for both readiness and liveness probe",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"webReadTimeout": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Maximum duration before timing out read of the request, and closing idle connections.",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"webMaxConnections": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Maximum number of simultaneous connections",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
+						"queryTimeout": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Maximum time a query may take before being aborted.",
+								Type:        []string{"string"},
+								Format:      "",
+							},
+						},
+						"queryMaxConcurrency": {
+							SchemaProps: spec.SchemaProps{
+								Description: "Maximum number of queries executed concurrently.",
+								Type:        []string{"integer"},
+								Format:      "int32",
+							},
+						},
 						"evaluationInterval": {
 							SchemaProps: spec.SchemaProps{
 								Description: "Interval between consecutive evaluations.",
