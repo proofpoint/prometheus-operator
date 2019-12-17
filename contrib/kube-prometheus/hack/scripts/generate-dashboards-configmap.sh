@@ -17,7 +17,7 @@ done
 
 virtualenv -p python3 .env 2>&1 > /dev/null
 source .env/bin/activate 2>&1 > /dev/null
-pip install -Ur requirements.txt 2>&1 > /dev/null
+pip install -Ur requirements.txt -c constraints.txt 2>&1 > /dev/null
 for f in assets/grafana/*.dashboard.py
 do
   basefilename=$(basename $f)
