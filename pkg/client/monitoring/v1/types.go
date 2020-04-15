@@ -88,12 +88,6 @@ type PrometheusSpec struct {
 	LivenessProbeInitialDelaySeconds *int32 `json:"livenessProbeInitialDelaySeconds,omitempty"`
 	// Number of times Readiness Probe can fail before taking pod out of rotation
 	ReadinessFailureThreshold *int32 `json:"readinessFailureThreshold,omitempty"`
-	// Readiness Probe PeriodSeconds
-	ReadinessPeriodSeconds *int32 `json:"readinessPeriodSeconds,omitempty"`
-	// Liveness Probe PeriodSeconds
-	LivenessPeriodSeconds *int32 `json:"livenessPeriodSeconds,omitempty"`
-	// Timeout in seconds for both readiness and liveness probe
-	ProbeTimeoutSeconds *int32 `json:"probeTimeoutSeconds,omitempty"`
 	// Maximum duration before timing out read of the request, and closing idle connections.
 	WebReadTimeout string `json:"webReadTimeout,omitempty"`
 	// Maximum number of simultaneous connections

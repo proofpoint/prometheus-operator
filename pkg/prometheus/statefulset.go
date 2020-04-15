@@ -55,14 +55,12 @@ var (
 	minLivenessFailureThreshold         int32 = 6
 	minLivenessProbeInitialDelaySeconds int32 = 30
 	minReadinessFailureThreshold        int32 = 6
-	minReadinessPeriodSeconds           int32 = 5
-	minLivenessPeriodSeconds            int32 = 5
 	managedByOperatorLabel                    = "managed-by"
 	managedByOperatorLabelValue               = "prometheus-operator"
 	managedByOperatorLabels                   = map[string]string{
 		managedByOperatorLabel: managedByOperatorLabelValue,
 	}
-	minProbeTimeoutSeconds int32 = 3
+	probeTimeoutSeconds int32 = 3
 
 	CompatibilityMatrix = []string{
 		"v1.4.0",
@@ -114,18 +112,6 @@ func makeStatefulSet(p monitoringv1.Prometheus, old *appsv1.StatefulSet, config 
 	}
 	if p.Spec.ReadinessFailureThreshold == nil || *p.Spec.ReadinessFailureThreshold < minReadinessFailureThreshold {
 		p.Spec.ReadinessFailureThreshold = &minReadinessFailureThreshold
-	}
-
-	if p.Spec.ReadinessPeriodSeconds == nil || *p.Spec.ReadinessPeriodSeconds < minReadinessPeriodSeconds {
-		p.Spec.ReadinessPeriodSeconds = &minReadinessPeriodSeconds
-	}
-
-	if p.Spec.LivenessPeriodSeconds == nil || *p.Spec.LivenessPeriodSeconds < minLivenessPeriodSeconds {
-		p.Spec.LivenessPeriodSeconds = &minLivenessPeriodSeconds
-	}
-
-	if p.Spec.ProbeTimeoutSeconds == nil || *p.Spec.ProbeTimeoutSeconds < minProbeTimeoutSeconds {
-		p.Spec.ProbeTimeoutSeconds = &minProbeTimeoutSeconds
 	}
 
 	if p.Spec.Resources.Requests == nil {
@@ -569,14 +555,14 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 		livenessProbe = &v1.Probe{
 			Handler:             livenessProbeHandler,
 			InitialDelaySeconds: livenessProbeInitialDelaySeconds,
-			PeriodSeconds:       *p.Spec.LivenessPeriodSeconds,
-			TimeoutSeconds:      *p.Spec.ProbeTimeoutSeconds,
+			PeriodSeconds:       5,
+			TimeoutSeconds:      probeTimeoutSeconds,
 			FailureThreshold:    *p.Spec.LivenessFailureThreshold,
 		}
 		readinessProbe = &v1.Probe{
 			Handler:          readinessProbeHandler,
-			TimeoutSeconds:   *p.Spec.ProbeTimeoutSeconds,
-			PeriodSeconds:    *p.Spec.ReadinessPeriodSeconds,
+			TimeoutSeconds:   probeTimeoutSeconds,
+			PeriodSeconds:    5,
 			FailureThreshold: *p.Spec.ReadinessFailureThreshold,
 		}
 	}
