@@ -21,7 +21,6 @@ import (
 	"net/url"
 	"path"
 	"sort"
-	"strconv"
 	"strings"
 
 	appsv1 "k8s.io/api/apps/v1beta2"
@@ -377,7 +376,6 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 			fmt.Sprintf("-storage.tsdb.path=%s", storageDir),
 			"-storage.tsdb.retention="+p.Spec.Retention,
 			"-web.enable-lifecycle",
-			"-web.enable-admin-api",
 			"-storage.tsdb.no-lockfile",
 		)
 
@@ -397,22 +395,6 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 
 	if p.Spec.SecurityContext != nil {
 		securityContext = p.Spec.SecurityContext
-	}
-
-	if p.Spec.WebReadTimeout != "" {
-		promArgs = append(promArgs, "-web.read-timeout="+p.Spec.WebReadTimeout)
-	}
-
-	if p.Spec.WebMaxConnections != nil {
-		promArgs = append(promArgs, "-web.max-connections="+strconv.Itoa(int(*p.Spec.WebMaxConnections)))
-	}
-
-	if p.Spec.QueryTimeout != "" {
-		promArgs = append(promArgs, "-query.timeout="+p.Spec.QueryTimeout)
-	}
-
-	if p.Spec.QueryMaxConcurrency != nil {
-		promArgs = append(promArgs, "-query.max-concurrency="+strconv.Itoa(int(*p.Spec.QueryMaxConcurrency)))
 	}
 
 	if p.Spec.ExternalURL != "" {

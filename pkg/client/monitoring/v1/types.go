@@ -88,14 +88,6 @@ type PrometheusSpec struct {
 	LivenessProbeInitialDelaySeconds *int32 `json:"livenessProbeInitialDelaySeconds,omitempty"`
 	// Number of times Readiness Probe can fail before taking pod out of rotation
 	ReadinessFailureThreshold *int32 `json:"readinessFailureThreshold,omitempty"`
-	// Maximum duration before timing out read of the request, and closing idle connections.
-	WebReadTimeout string `json:"webReadTimeout,omitempty"`
-	// Maximum number of simultaneous connections
-	WebMaxConnections *int32 `json:"webMaxConnections,omitempty"`
-	// Maximum time a query may take before being aborted.
-	QueryTimeout string `json:"queryTimeout,omitempty"`
-	// Maximum number of queries executed concurrently.
-	QueryMaxConcurrency *int32 `json:"queryMaxConcurrency,omitempty"`
 	// Interval between consecutive evaluations.
 	EvaluationInterval string `json:"evaluationInterval,omitempty"`
 	// The labels to add to any time series or alerts when communicating with
