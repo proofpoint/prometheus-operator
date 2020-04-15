@@ -535,7 +535,7 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 
 	var livenessProbeHandler v1.Handler
 	var readinessProbeHandler v1.Handler
-	var livenessProbeInitialDelaySeconds int32
+	var livenessFailureThreshold int32
 	if (version.Major == 1 && version.Minor >= 8) || version.Major == 2 {
 		livenessProbeHandler = v1.Handler{
 			HTTPGet: &v1.HTTPGetAction{
@@ -559,8 +559,8 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 		}
 		readinessProbeHandler = livenessProbeHandler
 		// For larger servers, restoring a checkpoint on startup may take quite a bit of time.
-		// Wait up to 5 minutes
-		livenessProbeInitialDelaySeconds = 300
+		// Wait up to 5 minutes (60 fails * 5s per fail)
+		livenessFailureThreshold = 60
 	}
 
 	var livenessProbe *v1.Probe
