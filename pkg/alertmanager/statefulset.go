@@ -405,7 +405,7 @@ func makeStatefulSetSpec(a *monitoringv1.Alertmanager, config Config) (*appsv1.S
 						Resources: v1.ResourceRequirements{
 							Limits: v1.ResourceList{
 								v1.ResourceCPU:    resource.MustParse("5m"),
-								v1.ResourceMemory: resource.MustParse("25Mi"),
+								v1.ResourceMemory: resource.MustParse("10Mi"),
 							},
 						},
 					},
