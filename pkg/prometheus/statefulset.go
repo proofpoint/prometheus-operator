@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	appsv1 "k8s.io/api/apps/v1beta2"
-	v1 "k8s.io/api/core/v1"
+	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -50,13 +50,10 @@ const (
 )
 
 var (
-	minReplicas                         int32 = 1
-	minLivenessFailureThreshold         int32 = 6
-	minLivenessProbeInitialDelaySeconds int32 = 30
-	minReadinessFailureThreshold        int32 = 6
-	managedByOperatorLabel                    = "managed-by"
-	managedByOperatorLabelValue               = "prometheus-operator"
-	managedByOperatorLabels                   = map[string]string{
+	minReplicas                 int32 = 1
+	managedByOperatorLabel            = "managed-by"
+	managedByOperatorLabelValue       = "prometheus-operator"
+	managedByOperatorLabels           = map[string]string{
 		managedByOperatorLabel: managedByOperatorLabelValue,
 	}
 	probeTimeoutSeconds int32 = 3
@@ -101,16 +98,6 @@ func makeStatefulSet(p monitoringv1.Prometheus, old *appsv1.StatefulSet, config 
 	}
 	if p.Spec.Retention == "" {
 		p.Spec.Retention = defaultRetention
-	}
-
-	if p.Spec.LivenessFailureThreshold == nil || *p.Spec.LivenessFailureThreshold < minLivenessFailureThreshold {
-		p.Spec.LivenessFailureThreshold = &minLivenessFailureThreshold
-	}
-	if p.Spec.LivenessProbeInitialDelaySeconds == nil || *p.Spec.LivenessProbeInitialDelaySeconds < minLivenessProbeInitialDelaySeconds {
-		p.Spec.LivenessProbeInitialDelaySeconds = &minLivenessProbeInitialDelaySeconds
-	}
-	if p.Spec.ReadinessFailureThreshold == nil || *p.Spec.ReadinessFailureThreshold < minReadinessFailureThreshold {
-		p.Spec.ReadinessFailureThreshold = &minReadinessFailureThreshold
 	}
 
 	if p.Spec.Resources.Requests == nil {
@@ -517,7 +504,7 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 				Port: intstr.FromString("web"),
 			},
 		}
-		livenessProbeInitialDelaySeconds = *p.Spec.LivenessProbeInitialDelaySeconds
+		livenessFailureThreshold = 6
 	} else {
 		livenessProbeHandler = v1.Handler{
 			HTTPGet: &v1.HTTPGetAction{
@@ -535,17 +522,16 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 	var readinessProbe *v1.Probe
 	if !p.Spec.ListenLocal {
 		livenessProbe = &v1.Probe{
-			Handler:             livenessProbeHandler,
-			InitialDelaySeconds: livenessProbeInitialDelaySeconds,
-			PeriodSeconds:       5,
-			TimeoutSeconds:      probeTimeoutSeconds,
-			FailureThreshold:    *p.Spec.LivenessFailureThreshold,
+			Handler:          livenessProbeHandler,
+			PeriodSeconds:    5,
+			TimeoutSeconds:   probeTimeoutSeconds,
+			FailureThreshold: livenessFailureThreshold,
 		}
 		readinessProbe = &v1.Probe{
 			Handler:          readinessProbeHandler,
 			TimeoutSeconds:   probeTimeoutSeconds,
 			PeriodSeconds:    5,
-			FailureThreshold: *p.Spec.ReadinessFailureThreshold,
+			FailureThreshold: 120, // Allow up to 10m on startup for data recovery
 		}
 	}
 
@@ -620,9 +606,9 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMaps []
 				ServiceAccountName:            p.Spec.ServiceAccountName,
 				NodeSelector:                  p.Spec.NodeSelector,
 				TerminationGracePeriodSeconds: &terminationGracePeriod,
-				Volumes:                       volumes,
-				Tolerations:                   p.Spec.Tolerations,
-				Affinity:                      p.Spec.Affinity,
+				Volumes:     volumes,
+				Tolerations: p.Spec.Tolerations,
+				Affinity:    p.Spec.Affinity,
 			},
 		},
 	}, nil
