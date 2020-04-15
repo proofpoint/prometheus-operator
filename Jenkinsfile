@@ -21,7 +21,7 @@ go get -u github.com/prometheus/promu
 EOF
 
 #Get the binary built at the right place
-docker run  --rm  --name goo -v "${env.WORKSPACE}":/go/src/github.com/coreos/prometheus-operator/ golang:1.13.4 /bin/bash /go/src/github.com/coreos/prometheus-operator/build.sh
+docker run  --rm  --name goo -v "${env.WORKSPACE}":/go/src/github.com/coreos/prometheus-operator/ golang:1.10 /bin/bash /go/src/github.com/coreos/prometheus-operator/build.sh
 
 #Build Docker image
 docker build -t repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.18.0-fork-$BUILD_NUMBER .
