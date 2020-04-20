@@ -1,5 +1,5 @@
-FROM golang:1.10-stretch
-
+FROM golang:1.13.4-stretch
+ENV GO111MODULE=on
 ENV JSONNET_VERSION 0.10.0
 
 RUN apt-get update -y && apt-get install -y g++ make git jq

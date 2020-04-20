@@ -1,3 +1,4 @@
+SHELL=/bin/bash -o pipefail
 REPO?=quay.io/coreos/prometheus-operator
 TAG?=$(shell git rev-parse --short HEAD)
 NAMESPACE?=po-e2e-$(shell LC_ALL=C tr -dc a-z0-9 < /dev/urandom | head -c 13 ; echo '')
@@ -19,6 +20,7 @@ short-build:
 	go install github.com/coreos/prometheus-operator/cmd/operator
 
 po-crdgen:
+	#@go get -u -v github.com/coreos/prometheus-operator/cmd/po-crdgen@v0.19.0
 	go install github.com/coreos/prometheus-operator/cmd/po-crdgen
 
 crossbuild: promu
@@ -71,18 +73,18 @@ docs: embedmd po-docgen
 	$(GOPATH)/bin/po-docgen compatibility > Documentation/compatibility.md
 
 generate: jsonnet-docker
-	docker run --rm -u=$(shell id -u $(USER)):$(shell id -g $(USER)) -v `pwd`:/go/src/github.com/coreos/prometheus-operator po-jsonnet make generate-deepcopy generate-openapi jsonnet generate-bundle generate-kube-prometheus docs generate-crd
+	docker run --rm -u=root:root -v `pwd`:/go/src/github.com/coreos/prometheus-operator:rw po-jsonnet make generate-deepcopy generate-openapi jsonnet generate-bundle generate-kube-prometheus docs 
 
 
 $(GOBIN)/openapi-gen:
-	go get -u -v -d k8s.io/code-generator/cmd/openapi-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.9
-	go install k8s.io/code-generator/cmd/openapi-gen
+	go get -u -v  k8s.io/code-generator/cmd/openapi-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.9
+	#go install k8s.io/code-generator/cmd/openapi-gen
 
 $(GOBIN)/deepcopy-gen:
-	go get -u -v -d k8s.io/code-generator/cmd/deepcopy-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.9
-	go install k8s.io/code-generator/cmd/deepcopy-gen
+	go get -u -v  k8s.io/code-generator/cmd/deepcopy-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.9
+	#go install k8s.io/code-generator/cmd/deepcopy-gen
 
 openapi-gen: $(GOBIN)/openapi-gen
 
