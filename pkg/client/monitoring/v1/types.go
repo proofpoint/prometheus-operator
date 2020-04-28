@@ -15,7 +15,7 @@
 package v1
 
 import (
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -84,6 +84,26 @@ type PrometheusSpec struct {
 	LogLevel string `json:"logLevel,omitempty"`
 	// Interval between consecutive scrapes.
 	ScrapeInterval string `json:"scrapeInterval,omitempty"`
+	// Number of times Liveness Probe can fail before killing pod
+	LivenessFailureThreshold *int32 `json:"livenessFailureThreshold,omitempty"`
+	// Time in seconds before which Liveness Probes will start
+	LivenessProbeInitialDelaySeconds *int32 `json:"livenessProbeInitialDelaySeconds,omitempty"`
+	// Number of times Readiness Probe can fail before taking pod out of rotation
+	ReadinessFailureThreshold *int32 `json:"readinessFailureThreshold,omitempty"`
+	// Readiness Probe PeriodSeconds
+	ReadinessPeriodSeconds *int32 `json:"readinessPeriodSeconds,omitempty"`
+	// Liveness Probe PeriodSeconds
+	LivenessPeriodSeconds *int32 `json:"livenessPeriodSeconds,omitempty"`
+	// Timeout in seconds for both readiness and liveness probe
+	ProbeTimeoutSeconds *int32 `json:"probeTimeoutSeconds,omitempty"`
+	// Maximum duration before timing out read of the request, and closing idle connections.
+	WebReadTimeout string `json:"webReadTimeout,omitempty"`
+	// Maximum number of simultaneous connections
+	WebMaxConnections *int32 `json:"webMaxConnections,omitempty"`
+	// Maximum time a query may take before being aborted.
+	QueryTimeout string `json:"queryTimeout,omitempty"`
+	// Maximum number of queries executed concurrently.
+	QueryMaxConcurrency *int32 `json:"queryMaxConcurrency,omitempty"`
 	// Interval between consecutive evaluations.
 	EvaluationInterval string `json:"evaluationInterval,omitempty"`
 	// The labels to add to any time series or alerts when communicating with
