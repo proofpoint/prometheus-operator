@@ -1,5 +1,6 @@
 sudo: required
 language: go
+go_import_path: github.com/coreos/prometheus-operator
 go:
 - "1.10"
 services:
