@@ -73,18 +73,18 @@ docs: embedmd po-docgen
 	$(GOPATH)/bin/po-docgen compatibility > Documentation/compatibility.md
 
 generate: jsonnet-docker
-	docker run --rm -u=$(shell id -u $(USER)):$(shell id -g $(USER)) -v `pwd`:/go/src/github.com/coreos/prometheus-operator po-jsonnet make generate-deepcopy generate-openapi generate-crd jsonnet generate-bundle generate-kube-prometheus docs
+	docker run --rm -u=root:root -v `pwd`:/go/src/github.com/coreos/prometheus-operator:rw po-jsonnet make generate-deepcopy generate-openapi jsonnet generate-bundle generate-kube-prometheus docs
 
 
 $(GOBIN)/openapi-gen:
-	go get -u -v -d k8s.io/code-generator/cmd/openapi-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.10
-	go install k8s.io/code-generator/cmd/openapi-gen
+	go get -u -v  k8s.io/code-generator/cmd/openapi-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.10
+	#go install k8s.io/code-generator/cmd/openapi-gen
 
 $(GOBIN)/deepcopy-gen:
-	go get -u -v -d k8s.io/code-generator/cmd/deepcopy-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.10
-	go install k8s.io/code-generator/cmd/deepcopy-gen
+	go get -u -v  k8s.io/code-generator/cmd/deepcopy-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.10
+	#go install k8s.io/code-generator/cmd/deepcopy-gen
 
 openapi-gen: $(GOBIN)/openapi-gen
 
