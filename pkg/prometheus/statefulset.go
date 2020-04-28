@@ -145,6 +145,9 @@ func makeStatefulSet(
 	if p.Spec.LivenessPeriodSeconds == nil || *p.Spec.LivenessPeriodSeconds < minLivenessPeriodSeconds {
 		p.Spec.LivenessPeriodSeconds = &minLivenessPeriodSeconds
 	}
+	if p.Spec.ProbeTimeoutSeconds == nil || *p.Spec.ProbeTimeoutSeconds < minProbeTimeoutSeconds {
+		p.Spec.ProbeTimeoutSeconds = &minProbeTimeoutSeconds
+	}
 	if p.Spec.Resources.Requests == nil {
 		p.Spec.Resources.Requests = v1.ResourceList{}
 	}
