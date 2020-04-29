@@ -13,7 +13,8 @@ jobs:
   # Check generated contents are up to date and code is formatted.
   - stage: Sanity check and unit tests
     script: ./scripts/check-make-generate.sh
-  - script: cd contrib/kube-prometheus && make test
+  # Commenting this test our as it depends on crd-gen from upstream which no longer exists    
+  #- script: cd contrib/kube-prometheus && make test
   # Build Prometheus config reloader
   - script: cd contrib/prometheus-config-reloader && make build
   # Build Prometheus Operator rule config map to rule file crds cli tool
