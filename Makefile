@@ -78,14 +78,14 @@ hack/prometheus-config-reloader-image: cmd/prometheus-config-reloader/Dockerfile
 ##############
 
 .PHONY: generate
-generate: pkg/client/monitoring/v1/zz_generated.deepcopy.go pkg/client/monitoring/v1/openapi_generated.go $(shell find jsonnet/prometheus-operator/*-crd.libsonnet -type f) bundle.yaml kube-prometheus $(shell find Documentation -type f)
+generate: pkg/client/monitoring/v1/zz_generated.deepcopy.go pkg/client/monitoring/v1/openapi_generated.go Documentation/api.md Documentation/compatibility.md
 
 .PHONY: generate-in-docker
 generate-in-docker: hack/jsonnet-docker-image
 	docker run \
 	--rm \
-	-u=$(shell id -u $(USER)):$(shell id -g $(USER)) \
-	-v `pwd`:/go/src/github.com/coreos/prometheus-operator \
+	-u=root:root \
+	-v `pwd`:/go/src/github.com/coreos/prometheus-operator:rw \
 	po-jsonnet make generate
 
 .PHONY: kube-prometheus
@@ -219,14 +219,14 @@ $(PO_DOCGEN_BINARY): $(shell find cmd/po-docgen -type f) pkg/client/monitoring/v
 	go install github.com/coreos/prometheus-operator/cmd/po-docgen
 
 $(OPENAPI_GEN_BINARY):
-	go get -u -v -d k8s.io/code-generator/cmd/openapi-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.11
-	go install k8s.io/code-generator/cmd/openapi-gen
+	go get -u -v k8s.io/code-generator/cmd/openapi-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.11
+	#go install k8s.io/code-generator/cmd/openapi-gen
 
 $(DEEPCOPY_GEN_BINARY):
-	go get -u -v -d k8s.io/code-generator/cmd/deepcopy-gen
-	cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.11
-	go install k8s.io/code-generator/cmd/deepcopy-gen
+	go get -u -v k8s.io/code-generator/cmd/deepcopy-gen
+	#cd $(GOPATH)/src/k8s.io/code-generator; git checkout release-1.11
+	#go install k8s.io/code-generator/cmd/deepcopy-gen
 
 $(GOJSONTOYAML_BINARY):
 	go get -u github.com/brancz/gojsontoyaml

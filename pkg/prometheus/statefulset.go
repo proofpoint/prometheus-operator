@@ -18,10 +18,11 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"strconv"
 	"strings"
 
 	appsv1 "k8s.io/api/apps/v1beta2"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -47,13 +48,20 @@ const (
 )
 
 var (
-	minReplicas                 int32 = 1
-	managedByOperatorLabel            = "managed-by"
-	managedByOperatorLabelValue       = "prometheus-operator"
-	managedByOperatorLabels           = map[string]string{
+	minReplicas int32 = 1
+
+	minLivenessFailureThreshold         int32 = 6
+	minLivenessProbeInitialDelaySeconds int32 = 30
+	minReadinessFailureThreshold        int32 = 6
+	minReadinessPeriodSeconds           int32 = 5
+	minLivenessPeriodSeconds            int32 = 5
+
+	managedByOperatorLabel      = "managed-by"
+	managedByOperatorLabelValue = "prometheus-operator"
+	managedByOperatorLabels     = map[string]string{
 		managedByOperatorLabel: managedByOperatorLabelValue,
 	}
-	probeTimeoutSeconds int32 = 3
+	minProbeTimeoutSeconds int32 = 3
 
 	CompatibilityMatrix = []string{
 		"v1.4.0",
@@ -122,7 +130,24 @@ func makeStatefulSet(
 	if p.Spec.Retention == "" {
 		p.Spec.Retention = defaultRetention
 	}
-
+	if p.Spec.LivenessFailureThreshold == nil || *p.Spec.LivenessFailureThreshold < minLivenessFailureThreshold {
+		p.Spec.LivenessFailureThreshold = &minLivenessFailureThreshold
+	}
+	if p.Spec.LivenessProbeInitialDelaySeconds == nil || *p.Spec.LivenessProbeInitialDelaySeconds < minLivenessProbeInitialDelaySeconds {
+		p.Spec.LivenessProbeInitialDelaySeconds = &minLivenessProbeInitialDelaySeconds
+	}
+	if p.Spec.ReadinessFailureThreshold == nil || *p.Spec.ReadinessFailureThreshold < minReadinessFailureThreshold {
+		p.Spec.ReadinessFailureThreshold = &minReadinessFailureThreshold
+	}
+	if p.Spec.ReadinessPeriodSeconds == nil || *p.Spec.ReadinessPeriodSeconds < minReadinessPeriodSeconds {
+		p.Spec.ReadinessPeriodSeconds = &minReadinessPeriodSeconds
+	}
+	if p.Spec.LivenessPeriodSeconds == nil || *p.Spec.LivenessPeriodSeconds < minLivenessPeriodSeconds {
+		p.Spec.LivenessPeriodSeconds = &minLivenessPeriodSeconds
+	}
+	if p.Spec.ProbeTimeoutSeconds == nil || *p.Spec.ProbeTimeoutSeconds < minProbeTimeoutSeconds {
+		p.Spec.ProbeTimeoutSeconds = &minProbeTimeoutSeconds
+	}
 	if p.Spec.Resources.Requests == nil {
 		p.Spec.Resources.Requests = v1.ResourceList{}
 	}
@@ -329,6 +354,7 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 			fmt.Sprintf("-storage.tsdb.path=%s", storageDir),
 			"-storage.tsdb.retention="+p.Spec.Retention,
 			"-web.enable-lifecycle",
+			"-web.enable-admin-api",
 			"-storage.tsdb.no-lockfile",
 		)
 
@@ -348,6 +374,22 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 
 	if p.Spec.SecurityContext != nil {
 		securityContext = p.Spec.SecurityContext
+	}
+
+	if p.Spec.WebReadTimeout != "" {
+		promArgs = append(promArgs, "-web.read-timeout="+p.Spec.WebReadTimeout)
+	}
+
+	if p.Spec.WebMaxConnections != nil {
+		promArgs = append(promArgs, "-web.max-connections="+strconv.Itoa(int(*p.Spec.WebMaxConnections)))
+	}
+
+	if p.Spec.QueryTimeout != "" {
+		promArgs = append(promArgs, "-query.timeout="+p.Spec.QueryTimeout)
+	}
+
+	if p.Spec.QueryMaxConcurrency != nil {
+		promArgs = append(promArgs, "-query.max-concurrency="+strconv.Itoa(int(*p.Spec.QueryMaxConcurrency)))
 	}
 
 	if p.Spec.ExternalURL != "" {
@@ -482,7 +524,7 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 
 	var livenessProbeHandler v1.Handler
 	var readinessProbeHandler v1.Handler
-	var livenessFailureThreshold int32
+	var livenessProbeInitialDelaySeconds int32
 	if (version.Major == 1 && version.Minor >= 8) || version.Major == 2 {
 		livenessProbeHandler = v1.Handler{
 			HTTPGet: &v1.HTTPGetAction{
@@ -496,7 +538,6 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 				Port: intstr.FromString("web"),
 			},
 		}
-		livenessFailureThreshold = 6
 	} else {
 		livenessProbeHandler = v1.Handler{
 			HTTPGet: &v1.HTTPGetAction{
@@ -507,23 +548,24 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 		readinessProbeHandler = livenessProbeHandler
 		// For larger servers, restoring a checkpoint on startup may take quite a bit of time.
 		// Wait up to 5 minutes (60 fails * 5s per fail)
-		livenessFailureThreshold = 60
+		livenessProbeInitialDelaySeconds = *p.Spec.LivenessProbeInitialDelaySeconds
 	}
 
 	var livenessProbe *v1.Probe
 	var readinessProbe *v1.Probe
 	if !p.Spec.ListenLocal {
 		livenessProbe = &v1.Probe{
-			Handler:          livenessProbeHandler,
-			PeriodSeconds:    5,
-			TimeoutSeconds:   probeTimeoutSeconds,
-			FailureThreshold: livenessFailureThreshold,
+			Handler:             livenessProbeHandler,
+			InitialDelaySeconds: livenessProbeInitialDelaySeconds,
+			PeriodSeconds:       *p.Spec.LivenessPeriodSeconds,
+			TimeoutSeconds:      *p.Spec.ProbeTimeoutSeconds,
+			FailureThreshold:    *p.Spec.LivenessFailureThreshold,
 		}
 		readinessProbe = &v1.Probe{
 			Handler:          readinessProbeHandler,
-			TimeoutSeconds:   probeTimeoutSeconds,
-			PeriodSeconds:    5,
-			FailureThreshold: 120, // Allow up to 10m on startup for data recovery
+			TimeoutSeconds:   *p.Spec.ProbeTimeoutSeconds,
+			PeriodSeconds:    *p.Spec.ReadinessPeriodSeconds,
+			FailureThreshold: *p.Spec.ReadinessFailureThreshold,
 		}
 	}
 
@@ -560,7 +602,7 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 			Resources: v1.ResourceRequirements{
 				Limits: v1.ResourceList{
 					v1.ResourceCPU:    resource.MustParse("5m"),
-					v1.ResourceMemory: resource.MustParse("10Mi"),
+					v1.ResourceMemory: resource.MustParse("25Mi"),
 				},
 			},
 		}
@@ -757,9 +799,9 @@ func makeStatefulSetSpec(p monitoringv1.Prometheus, c *Config, ruleConfigMapName
 				ServiceAccountName:            p.Spec.ServiceAccountName,
 				NodeSelector:                  p.Spec.NodeSelector,
 				TerminationGracePeriodSeconds: &terminationGracePeriod,
-				Volumes:     volumes,
-				Tolerations: p.Spec.Tolerations,
-				Affinity:    p.Spec.Affinity,
+				Volumes:                       volumes,
+				Tolerations:                   p.Spec.Tolerations,
+				Affinity:                      p.Spec.Affinity,
 			},
 		},
 	}, nil

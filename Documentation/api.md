@@ -72,7 +72,7 @@ Alertmanager describes an Alertmanager cluster.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
+| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
 | spec | Specification of the desired behavior of the Alertmanager cluster. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status | [AlertmanagerSpec](#alertmanagerspec) | true |
 | status | Most recent observed status of the Alertmanager cluster. Read-only. Not included when requesting from the apiserver, only from the Prometheus Operator API itself. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status | *[AlertmanagerStatus](#alertmanagerstatus) | false |
 
@@ -100,7 +100,7 @@ AlertmanagerList is a list of Alertmanagers.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#listmeta-v1-meta) | false |
+| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#listmeta-v1-meta) | false |
 | items | List of Alertmanagers | [][Alertmanager](#alertmanager) | true |
 
 [Back to TOC](#table-of-contents)
@@ -111,11 +111,11 @@ AlertmanagerSpec is a specification of the desired behavior of the Alertmanager 
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| podMetadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata Metadata Labels and Annotations gets propagated to the prometheus pods. | *[metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
+| podMetadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata Metadata Labels and Annotations gets propagated to the prometheus pods. | *[metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
 | version | Version the cluster should be on. | string | false |
 | tag | Tag of Alertmanager container image to be deployed. Defaults to the value of `version`. | string | false |
 | baseImage | Base image that is used to deploy pods, without tag. | string | false |
-| imagePullSecrets | An optional list of references to secrets in the same namespace to use for pulling prometheus and alertmanager images from registries see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod | [][v1.LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#localobjectreference-v1-core) | false |
+| imagePullSecrets | An optional list of references to secrets in the same namespace to use for pulling prometheus and alertmanager images from registries see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod | [][v1.LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#localobjectreference-v1-core) | false |
 | secrets | Secrets is a list of Secrets in the same namespace as the Alertmanager object, which shall be mounted into the Alertmanager Pods. The Secrets are mounted into /etc/alertmanager/secrets/<secret-name>. | []string | false |
 | logLevel | Log level for Alertmanager to be configured with. | string | false |
 | replicas | Size is the expected size of the alertmanager cluster. The controller will eventually make the size of the running cluster equal to the expected size. | *int32 | false |
@@ -125,7 +125,7 @@ AlertmanagerSpec is a specification of the desired behavior of the Alertmanager 
 | routePrefix | The route prefix Alertmanager registers HTTP handlers for. This is useful, if using ExternalURL and a proxy is rewriting HTTP routes of a request, and the actual ExternalURL is still true, but the server serves requests under a different route prefix. For example for use with `kubectl proxy`. | string | false |
 | paused | If set to true all actions on the underlaying managed objects are not goint to be performed, except for delete actions. | bool | false |
 | nodeSelector | Define which Nodes the Pods are scheduled on. | map[string]string | false |
-| resources | Define resources requests and limits for single Pods. | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#resourcerequirements-v1-core) | false |
+| resources | Define resources requests and limits for single Pods. | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#resourcerequirements-v1-core) | false |
 | affinity | If specified, the pod's scheduling constraints. | *v1.Affinity | false |
 | tolerations | If specified, the pod's tolerations. | []v1.Toleration | false |
 | securityContext | SecurityContext holds pod-level security attributes and common container settings. This defaults to non root user with uid 1000 and gid 2000. | *v1.PodSecurityContext | false |
@@ -155,8 +155,8 @@ BasicAuth allow an endpoint to authenticate over basic authentication More info:
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| username | The secret that contains the username for authenticate | [v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
-| password | The secret that contains the password for authenticate | [v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
+| username | The secret that contains the username for authenticate | [v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
+| password | The secret that contains the password for authenticate | [v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
 
 [Back to TOC](#table-of-contents)
 
@@ -199,7 +199,7 @@ Prometheus defines a Prometheus deployment.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
+| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
 | spec | Specification of the desired behavior of the Prometheus cluster. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status | [PrometheusSpec](#prometheusspec) | true |
 | status | Most recent observed status of the Prometheus cluster. Read-only. Not included when requesting from the apiserver, only from the Prometheus Operator API itself. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status | *[PrometheusStatus](#prometheusstatus) | false |
 
@@ -211,7 +211,7 @@ PrometheusList is a list of Prometheuses.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#listmeta-v1-meta) | false |
+| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#listmeta-v1-meta) | false |
 | items | List of Prometheuses | []*[Prometheus](#prometheus) | true |
 
 [Back to TOC](#table-of-contents)
@@ -222,7 +222,7 @@ PrometheusRule defines alerting rules for a Prometheus instance
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard object’s metadata. More info: http://releases.k8s.io/HEAD/docs/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
+| metadata | Standard object’s metadata. More info: http://releases.k8s.io/HEAD/docs/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
 | spec | Specification of desired alerting rule definitions for Prometheus. | [PrometheusRuleSpec](#prometheusrulespec) | true |
 
 [Back to TOC](#table-of-contents)
@@ -233,7 +233,7 @@ PrometheusRuleList is a list of PrometheusRules.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard list metadata More info: http://releases.k8s.io/HEAD/docs/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#listmeta-v1-meta) | false |
+| metadata | Standard list metadata More info: http://releases.k8s.io/HEAD/docs/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#listmeta-v1-meta) | false |
 | items | List of Rules | []*[PrometheusRule](#prometheusrule) | true |
 
 [Back to TOC](#table-of-contents)
@@ -254,27 +254,37 @@ PrometheusSpec is a specification of the desired behavior of the Prometheus clus
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| podMetadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata Metadata Labels and Annotations gets propagated to the prometheus pods. | *[metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
-| serviceMonitorSelector | ServiceMonitors to be selected for target discovery. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | false |
-| serviceMonitorNamespaceSelector | Namespaces to be selected for ServiceMonitor discovery. If nil, only check own namespace. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | false |
+| podMetadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata Metadata Labels and Annotations gets propagated to the prometheus pods. | *[metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
+| serviceMonitorSelector | ServiceMonitors to be selected for target discovery. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | false |
+| serviceMonitorNamespaceSelector | Namespaces to be selected for ServiceMonitor discovery. If nil, only check own namespace. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | false |
 | version | Version of Prometheus to be deployed. | string | false |
 | tag | Tag of Prometheus container image to be deployed. Defaults to the value of `version`. | string | false |
 | paused | When a Prometheus deployment is paused, no actions except for deletion will be performed on the underlying objects. | bool | false |
 | baseImage | Base image to use for a Prometheus deployment. | string | false |
-| imagePullSecrets | An optional list of references to secrets in the same namespace to use for pulling prometheus and alertmanager images from registries see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod | [][v1.LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#localobjectreference-v1-core) | false |
+| imagePullSecrets | An optional list of references to secrets in the same namespace to use for pulling prometheus and alertmanager images from registries see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod | [][v1.LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#localobjectreference-v1-core) | false |
 | replicas | Number of instances to deploy for a Prometheus deployment. | *int32 | false |
 | retention | Time duration Prometheus shall retain data for. Default is '24h'. | string | false |
 | logLevel | Log level for Prometheus to be configured with. | string | false |
 | scrapeInterval | Interval between consecutive scrapes. | string | false |
+| livenessFailureThreshold | Number of times Liveness Probe can fail before killing pod | *int32 | false |
+| livenessProbeInitialDelaySeconds | Time in seconds before which Liveness Probes will start | *int32 | false |
+| readinessFailureThreshold | Number of times Readiness Probe can fail before taking pod out of rotation | *int32 | false |
+| readinessPeriodSeconds | Readiness Probe PeriodSeconds | *int32 | false |
+| livenessPeriodSeconds | Liveness Probe PeriodSeconds | *int32 | false |
+| probeTimeoutSeconds | Timeout in seconds for both readiness and liveness probe | *int32 | false |
+| webReadTimeout | Maximum duration before timing out read of the request, and closing idle connections. | string | false |
+| webMaxConnections | Maximum number of simultaneous connections | *int32 | false |
+| queryTimeout | Maximum time a query may take before being aborted. | string | false |
+| queryMaxConcurrency | Maximum number of queries executed concurrently. | *int32 | false |
 | evaluationInterval | Interval between consecutive evaluations. | string | false |
 | externalLabels | The labels to add to any time series or alerts when communicating with external systems (federation, remote storage, Alertmanager). | map[string]string | false |
 | externalUrl | The external URL the Prometheus instances will be available under. This is necessary to generate correct URLs. This is necessary if Prometheus is not served from root of a DNS name. | string | false |
 | routePrefix | The route prefix Prometheus registers HTTP handlers for. This is useful, if using ExternalURL and a proxy is rewriting HTTP routes of a request, and the actual ExternalURL is still true, but the server serves requests under a different route prefix. For example for use with `kubectl proxy`. | string | false |
 | storage | Storage spec to specify how storage shall be used. | *[StorageSpec](#storagespec) | false |
-| ruleSelector | A selector to select which PrometheusRules to mount for loading alerting rules from. Until (excluding) Prometheus Operator v0.24.0 Prometheus Operator will migrate any legacy rule ConfigMaps to PrometheusRule custom resources selected by RuleSelector. Make sure it does not match any config maps that you do not want to be migrated. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | false |
-| ruleNamespaceSelector | Namespaces to be selected for PrometheusRules discovery. If unspecified, only the same namespace as the Prometheus object is in is used. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | false |
+| ruleSelector | A selector to select which PrometheusRules to mount for loading alerting rules from. Until (excluding) Prometheus Operator v0.24.0 Prometheus Operator will migrate any legacy rule ConfigMaps to PrometheusRule custom resources selected by RuleSelector. Make sure it does not match any config maps that you do not want to be migrated. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | false |
+| ruleNamespaceSelector | Namespaces to be selected for PrometheusRules discovery. If unspecified, only the same namespace as the Prometheus object is in is used. | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | false |
 | alerting | Define details regarding alerting. | *[AlertingSpec](#alertingspec) | false |
-| resources | Define resources requests and limits for single Pods. | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#resourcerequirements-v1-core) | false |
+| resources | Define resources requests and limits for single Pods. | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#resourcerequirements-v1-core) | false |
 | nodeSelector | Define which Nodes the Pods are scheduled on. | map[string]string | false |
 | serviceAccountName | ServiceAccountName is the name of the ServiceAccount to use to run the Prometheus Pods. | string | false |
 | secrets | Secrets is a list of Secrets in the same namespace as the Prometheus object, which shall be mounted into the Prometheus Pods. The Secrets are mounted into /etc/prometheus/secrets/<secret-name>. Secrets changes after initial creation of a Prometheus object are not reflected in the running Pods. To change the secrets mounted into the Prometheus Pods, the object must be deleted and recreated with the new list of secrets. | []string | false |
@@ -285,8 +295,8 @@ PrometheusSpec is a specification of the desired behavior of the Prometheus clus
 | securityContext | SecurityContext holds pod-level security attributes and common container settings. This defaults to non root user with uid 1000 and gid 2000 for Prometheus >v2.0 and default PodSecurityContext for other versions. | *v1.PodSecurityContext | false |
 | listenLocal | ListenLocal makes the Prometheus server listen on loopback, so that it does not bind against the Pod IP. | bool | false |
 | containers | Containers allows injecting additional containers. This is meant to allow adding an authentication proxy to a Prometheus pod. | []v1.Container | false |
-| additionalScrapeConfigs | AdditionalScrapeConfigs allows specifying a key of a Secret containing additional Prometheus scrape configurations. Scrape configurations specified are appended to the configurations generated by the Prometheus Operator. Job configurations specified must have the form as specified in the official Prometheus documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<scrape_config>. As scrape configs are appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible scrape configs are going to break Prometheus after the upgrade. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
-| additionalAlertManagerConfigs | AdditionalAlertManagerConfigs allows specifying a key of a Secret containing additional Prometheus AlertManager configurations. AlertManager configurations specified are appended to the configurations generated by the Prometheus Operator. Job configurations specified must have the form as specified in the official Prometheus documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<alertmanager_config>. As AlertManager configs are appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible AlertManager configs are going to break Prometheus after the upgrade. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
+| additionalScrapeConfigs | AdditionalScrapeConfigs allows specifying a key of a Secret containing additional Prometheus scrape configurations. Scrape configurations specified are appended to the configurations generated by the Prometheus Operator. Job configurations specified must have the form as specified in the official Prometheus documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<scrape_config>. As scrape configs are appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible scrape configs are going to break Prometheus after the upgrade. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
+| additionalAlertManagerConfigs | AdditionalAlertManagerConfigs allows specifying a key of a Secret containing additional Prometheus AlertManager configurations. AlertManager configurations specified are appended to the configurations generated by the Prometheus Operator. Job configurations specified must have the form as specified in the official Prometheus documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<alertmanager_config>. As AlertManager configs are appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible AlertManager configs are going to break Prometheus after the upgrade. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
 | apiserverConfig | APIServerConfig allows specifying a host and auth methods to access apiserver. If left empty, Prometheus is assumed to run inside of the cluster and will discover API servers automatically and use the pod's CA certificate and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/. | *[APIServerConfig](#apiserverconfig) | false |
 | thanos | Thanos configuration allows configuring various aspects of a Prometheus server in a Thanos environment.\n\nThis section is experimental, it may change significantly without deprecation notice in any release.\n\nThis is experimental and may change significantly without backward compatibility in any release. | *[ThanosSpec](#thanosspec) | false |
 
@@ -407,7 +417,7 @@ ServiceMonitor defines monitoring for a set of services.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#objectmeta-v1-meta) | false |
+| metadata | Standard object’s metadata. More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#objectmeta-v1-meta) | false |
 | spec | Specification of desired Service selection for target discrovery by Prometheus. | [ServiceMonitorSpec](#servicemonitorspec) | true |
 
 [Back to TOC](#table-of-contents)
@@ -418,7 +428,7 @@ ServiceMonitorList is a list of ServiceMonitors.
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#listmeta-v1-meta) | false |
+| metadata | Standard list metadata More info: https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata | [metav1.ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#listmeta-v1-meta) | false |
 | items | List of ServiceMonitors | []*[ServiceMonitor](#servicemonitor) | true |
 
 [Back to TOC](#table-of-contents)
@@ -432,7 +442,7 @@ ServiceMonitorSpec contains specification parameters for a ServiceMonitor.
 | jobLabel | The label to use to retrieve the job name from. | string | false |
 | targetLabels | TargetLabels transfers labels on the Kubernetes Service onto the target. | []string | false |
 | endpoints | A list of endpoints allowed as part of this ServiceMonitor. | [][Endpoint](#endpoint) | true |
-| selector | Selector to select Endpoints objects. | [metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | true |
+| selector | Selector to select Endpoints objects. | [metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | true |
 | namespaceSelector | Selector to select which namespaces the Endpoints objects are discovered from. | [NamespaceSelector](#namespaceselector) | false |
 
 [Back to TOC](#table-of-contents)
@@ -444,10 +454,10 @@ StorageSpec defines the configured storage for a group Prometheus servers.
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
 | class | Name of the StorageClass to use when requesting storage provisioning. More info: https://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses DEPRECATED | string | false |
-| emptyDir | EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir | *[v1.EmptyDirVolumeSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#emptydirvolumesource-v1-core) | false |
-| selector | A label query over volumes to consider for binding. DEPRECATED | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#labelselector-v1-meta) | false |
-| resources | Resources represents the minimum resources the volume should have. More info: http://kubernetes.io/docs/user-guide/persistent-volumes#resources DEPRECATED | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#resourcerequirements-v1-core) | false |
-| volumeClaimTemplate | A PVC spec to be used by the Prometheus StatefulSets. | [v1.PersistentVolumeClaim](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#persistentvolumeclaim-v1-core) | false |
+| emptyDir | EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir | *[v1.EmptyDirVolumeSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#emptydirvolumesource-v1-core) | false |
+| selector | A label query over volumes to consider for binding. DEPRECATED | *[metav1.LabelSelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#labelselector-v1-meta) | false |
+| resources | Resources represents the minimum resources the volume should have. More info: http://kubernetes.io/docs/user-guide/persistent-volumes#resources DEPRECATED | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#resourcerequirements-v1-core) | false |
+| volumeClaimTemplate | A PVC spec to be used by the Prometheus StatefulSets. | [v1.PersistentVolumeClaim](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#persistentvolumeclaim-v1-core) | false |
 
 [Back to TOC](#table-of-contents)
 
@@ -472,7 +482,7 @@ ThanosGCSSpec defines parameters for use of Google Cloud Storage (GCS) with Than
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
 | bucket | Google Cloud Storage bucket name for stored blocks. If empty it won't store any block inside Google Cloud Storage. | *string | false |
-| credentials | Secret to access our Bucket. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
+| credentials | Secret to access our Bucket. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
 
 [Back to TOC](#table-of-contents)
 
@@ -484,8 +494,8 @@ ThanosS3Spec defines parameters for of AWS Simple Storage Service (S3) with Than
 | ----- | ----------- | ------ | -------- |
 | bucket | S3-Compatible API bucket name for stored blocks. | *string | false |
 | endpoint | S3-Compatible API endpoint for stored blocks. | *string | false |
-| accessKey | AccessKey for an S3-Compatible API. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
-| secretKey | SecretKey for an S3-Compatible API. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#secretkeyselector-v1-core) | false |
+| accessKey | AccessKey for an S3-Compatible API. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
+| secretKey | SecretKey for an S3-Compatible API. | *[v1.SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#secretkeyselector-v1-core) | false |
 | insecure | Whether to use an insecure connection with an S3-Compatible API. | *bool | false |
 | signatureVersion2 | Whether to use S3 Signature Version 2; otherwise Signature Version 4 will be used. | *bool | false |
 | encryptsse | Whether to use Server Side Encryption | *bool | false |
@@ -502,7 +512,7 @@ ThanosSpec defines parameters for a Prometheus server within a Thanos deployment
 | version | Version describes the version of Thanos to use. | *string | false |
 | tag | Tag of Thanos sidecar container image to be deployed. Defaults to the value of `version`. | *string | false |
 | baseImage | Thanos base image if other than default. | *string | false |
-| resources | Resources defines the resource requirements for the Thanos sidecar. If not provided, no requests/limits will be set | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#resourcerequirements-v1-core) | false |
+| resources | Resources defines the resource requirements for the Thanos sidecar. If not provided, no requests/limits will be set | [v1.ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/#resourcerequirements-v1-core) | false |
 | gcs | GCS configures use of GCS in Thanos. | *[ThanosGCSSpec](#thanosgcsspec) | false |
 | s3 | S3 configures use of S3 in Thanos. | *[ThanosS3Spec](#thanoss3spec) | false |
 
