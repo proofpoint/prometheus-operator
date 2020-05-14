@@ -8,7 +8,7 @@ pipeline {
 
   stages{
     stage('Build image') {
-      when { branch 'release-0.20' }
+      when { branch 'release-0.23' }
       steps {
         sh """
 docker version
@@ -24,8 +24,8 @@ EOF
 docker run  --rm  --name goo -v "${env.WORKSPACE}":/go/src/github.com/coreos/prometheus-operator/ golang:1.13.4 /bin/bash /go/src/github.com/coreos/prometheus-operator/build.sh
 
 #Build Docker image
-docker build -t repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.20.0-fork-$BUILD_NUMBER .
-docker push repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.20.0-fork-$BUILD_NUMBER
+docker build -t repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER .
+docker push repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER
 echo "Done"
         """
       }
