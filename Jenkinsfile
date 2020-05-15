@@ -13,12 +13,10 @@ pipeline {
         sh """
 docker version
 
-#Script to build binary and image
-make build image image-retag
-
-#Build Docker image
-docker tag prometheus repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER .
+#Build Docker image & push
+docker build -t prometheus repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER .
 docker push repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER
+
 echo "Done"
         """
       }
