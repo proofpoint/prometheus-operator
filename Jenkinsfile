@@ -14,7 +14,7 @@ pipeline {
 docker version
 
 #Build Docker image & push
-docker build -t prometheus repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER .
+docker build -t repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER .
 docker push repocache.nonprod.ppops.net/dev-docker-local/prometheus/prometheus-operator:v0.23.0-fork-$BUILD_NUMBER
 
 echo "Done"
